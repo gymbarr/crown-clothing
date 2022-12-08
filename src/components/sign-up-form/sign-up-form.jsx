@@ -1,56 +1,65 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 
-import FormInput from "../form-input/form-input"
-import Button from '../button/button'
+import FormInput from "../form-input/form-input";
+import Button from "../button/button";
+
+import { UserContext } from "../../contexts/user";
 
 import {
   createAuthUserWithEmailAndPassword,
-  createUserDocumentFromAuth
-} from "../../utils/firebase/firebase"
+  createUserDocumentFromAuth,
+} from "../../utils/firebase/firebase";
 
-import './sign-up-form.scss'
+import "./sign-up-form.scss";
 
 const defaultFormFields = {
   displayName: "",
   email: "",
   password: "",
   confirmPassword: "",
-}
+};
 
 const SignUpForm = () => {
-  const [formFields, setFormFields] = useState(defaultFormFields)
-  const { displayName, email, password, confirmPassword } = formFields
+  const [formFields, setFormFields] = useState(defaultFormFields);
+  const { displayName, email, password, confirmPassword } = formFields;
+
+  const { setCurrentUser } = useContext(UserContext);
 
   const resetFormFields = () => {
-    setFormFields(defaultFormFields)
-  }
+    setFormFields(defaultFormFields);
+  };
 
   const handleSubmit = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
 
     if (password !== confirmPassword) {
-      alert("Passwords don't match!")
-      return
+      alert("Passwords don't match!");
+      return;
     }
 
     try {
-      const { user } = await createAuthUserWithEmailAndPassword(email, password)
-      await createUserDocumentFromAuth(user, { displayName })
-      resetFormFields()
-    } catch(error) {
-      if (error.code === 'auth/email-already-in-use') {
-        alert('Cannot create user, email already in use')
+      const { user } = await createAuthUserWithEmailAndPassword(
+        email,
+        password
+      );
+      await createUserDocumentFromAuth(user, { displayName });
+      setCurrentUser(user)
+      
+      resetFormFields();
+    } catch (error) {
+      if (error.code === "auth/email-already-in-use") {
+        alert("Cannot create user, email already in use");
       } else {
-        console.log('user creation encountered an error', error)
+        console.log("user creation encountered an error", error);
       }
     }
-  }
+  };
 
   const handleChange = (event) => {
-    const { name, value } = event.target
+    const { name, value } = event.target;
 
-    setFormFields({ ...formFields, [name]: value })
-  }
+    setFormFields({ ...formFields, [name]: value });
+  };
 
   return (
     <div className="sign-up-container">
@@ -96,7 +105,7 @@ const SignUpForm = () => {
         <Button type="submit">Sign Up</Button>
       </form>
     </div>
-  )
-}
+  );
+};
 
 export default SignUpForm;
