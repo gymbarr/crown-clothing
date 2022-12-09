@@ -1,6 +1,3 @@
-// import SHOP_DATA from '../../shop-data.json'
-
-// import { ProductsProvider } from "../../contexts/product"
 import { useContext } from 'react'
 import { ProductsContext } from '../../contexts/products'
 
