@@ -29,7 +29,7 @@ const SignInForm = () => {
 
     try {
       const { user } = await signInAuthWithEmailAndPassword(email, password)
-      await createUserDocumentFromAuth(user)
+
       resetFormFields()
     } catch (error) {
       if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
@@ -47,8 +47,7 @@ const SignInForm = () => {
   };
 
   const signInWithGoogle = async () => {
-    const { user } = await signInWithGooglePopup()
-    await createUserDocumentFromAuth(user)
+    await signInWithGooglePopup()
   }
 
   return (
