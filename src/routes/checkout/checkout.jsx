@@ -5,8 +5,14 @@ import './checkout.scss'
 
 const Checkout = () => {
   return (
-    <div>
-      <h1>Checkout Page</h1>
+    <div className='checkout-container'>
+      <div className='checkout-header'>
+          <span className='header-block'>Product</span>
+          <span className='header-block'>Description</span>
+          <span className='header-block'>Quantity</span>
+          <span className='header-block'>Price</span>
+          <span className='last-child'>Remove</span>
+      </div>
     </div>
   )
 }
