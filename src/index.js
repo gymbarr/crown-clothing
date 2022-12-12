@@ -6,6 +6,7 @@ import App from './App'
 
 import { UserProvider } from './contexts/user'
 import { ProductsProvider } from "./contexts/products"
+import { CartProvider } from './contexts/cart'
 
 import reportWebVitals from './reportWebVitals'
 
@@ -17,7 +18,9 @@ root.render(
     <BrowserRouter>
       <UserProvider>
         <ProductsProvider>
-          <App />
+          <CartProvider>
+            <App />
+          </CartProvider>
         </ProductsProvider>
       </UserProvider>
     </BrowserRouter>
