@@ -9,7 +9,7 @@ import './cart-dropdown.scss'
 
 const CartDropwdown = () => {
   const { cartItems } = useContext(CartContext)
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const goToCheckoutHandler = () => {
     navigate('/checkout')
