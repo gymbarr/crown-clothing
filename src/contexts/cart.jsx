@@ -2,15 +2,16 @@ import { createContext, useState, useEffect } from "react"
 
 export const addCartItem = (cartItems, productToAdd) => {
   const existingCartItem = cartItems.find(
-    (cartItem) => cartItem.id === productToAdd.id)
+    (cartItem) => cartItem.id === productToAdd.id
+  )
 
   if (existingCartItem) {
     return cartItems.map((cartItem) =>
-      cartItem.id === productToAdd.id 
+      cartItem.id === productToAdd.id
         ? { ...cartItem, quantity: cartItem.quantity + 1 }
         : cartItem
     )
-  } 
+  }
 
   return [...cartItems, { ...productToAdd, quantity: 1 }]
 }
@@ -20,18 +21,28 @@ export const CartContext = createContext({
   toggleDropdownVisible: () => {},
   cartItems: [],
   addItemToCart: () => {},
-  cartCount: 0
+  cartCount: 0,
+  cartPrice: 0,
 })
 
 export const CartProvider = ({ children }) => {
   const [dropdownVisible, setDropdownVisible] = useState(false)
   const [cartItems, setCartItems] = useState([])
   const [cartCount, setCartCount] = useState(0)
+  const [cartPrice, setCartPrice] = useState(0)
 
   useEffect(() => {
-    const newCartCount = cartItems.reduce((total, cartItem) => total + cartItem.quantity, 0)
+    const newCartCount = cartItems.reduce(
+      (total, cartItem) => total + cartItem.quantity,
+      0
+    )
+    const newCartPrice = cartItems.reduce(
+      (total, cartItem) => total + cartItem.price * cartItem.quantity,
+      0
+    )
 
     setCartCount(newCartCount)
+    setCartPrice(newCartPrice)
   }, [cartItems])
 
   const toggleDropdownVisible = () => setDropdownVisible(!dropdownVisible)
@@ -40,7 +51,14 @@ export const CartProvider = ({ children }) => {
     setCartItems(addCartItem(cartItems, productToAdd))
   }
 
-  const value = { dropdownVisible, toggleDropdownVisible, addItemToCart, cartItems, cartCount }
+  const value = {
+    dropdownVisible,
+    toggleDropdownVisible,
+    addItemToCart,
+    cartItems,
+    cartCount,
+    cartPrice,
+  }
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>
 }
