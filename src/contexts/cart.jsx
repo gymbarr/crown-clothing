@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from "react"
 
-export const addCartItem = (cartItems, productToAdd) => {
+const addCartItem = (cartItems, productToAdd) => {
   const existingCartItem = cartItems.find(
     (cartItem) => cartItem.id === productToAdd.id
   )
@@ -14,6 +14,20 @@ export const addCartItem = (cartItems, productToAdd) => {
   }
 
   return [...cartItems, { ...productToAdd, quantity: 1 }]
+}
+
+const changeItemQuantity = (cartItems, cartItemToChangeQuantity, value) => {
+  if (cartItemToChangeQuantity.quantity <= 1 && value < 0 ) return cartItems
+
+  return cartItems.map((cartItem) =>
+    cartItem.id === cartItemToChangeQuantity.id
+      ? { ...cartItem, quantity: cartItem.quantity + value }
+      : cartItem
+  )
+}
+
+const removeCartItem = (cartItems, cartItemToRemove) => {
+  return cartItems.filter((cartItem) => cartItem.id !== cartItemToRemove.id)
 }
 
 export const CartContext = createContext({
@@ -36,12 +50,16 @@ export const CartProvider = ({ children }) => {
       (total, cartItem) => total + cartItem.quantity,
       0
     )
+
+    setCartCount(newCartCount)
+  }, [cartItems])
+
+  useEffect(() => {
     const newCartPrice = cartItems.reduce(
       (total, cartItem) => total + cartItem.price * cartItem.quantity,
       0
     )
 
-    setCartCount(newCartCount)
     setCartPrice(newCartPrice)
   }, [cartItems])
 
@@ -51,10 +69,20 @@ export const CartProvider = ({ children }) => {
     setCartItems(addCartItem(cartItems, productToAdd))
   }
 
+  const changeCartItemQuantity = (cartItemToChangeQuantity, value) => {
+    setCartItems(changeItemQuantity(cartItems, cartItemToChangeQuantity, value))
+  }
+
+  const removeItemFromCart = (cartItemToRemove) => {
+    setCartItems(removeCartItem(cartItems, cartItemToRemove))
+  }
+
   const value = {
     dropdownVisible,
     toggleDropdownVisible,
     addItemToCart,
+    changeCartItemQuantity,
+    removeItemFromCart,
     cartItems,
     cartCount,
     cartPrice,
