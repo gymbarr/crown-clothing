@@ -17,7 +17,7 @@ const addCartItem = (cartItems, productToAdd) => {
 }
 
 const changeItemQuantity = (cartItems, cartItemToChangeQuantity, value) => {
-  if (cartItemToChangeQuantity.quantity <= 1 && value < 0 ) return cartItems
+  if (cartItemToChangeQuantity.quantity <= 1 && value < 0) return cartItems
 
   return cartItems.map((cartItem) =>
     cartItem.id === cartItemToChangeQuantity.id

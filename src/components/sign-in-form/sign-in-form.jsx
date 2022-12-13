@@ -1,7 +1,7 @@
 import { useState } from "react"
 
 import FormInput from "../form-input/form-input"
-import Button from "../button/button"
+import Button, { BUTTON_TYPE_CLASSES } from "../button/button"
 
 import {
   signInAuthWithEmailAndPassword,
@@ -9,7 +9,7 @@ import {
   createUserDocumentFromAuth,
 } from "../../utils/firebase/firebase"
 
-import "./sign-in-form.scss"
+import { SignInContainer, ButtonsContainer } from "./sign-in-form.styles"
 
 const defaultFormFields = {
   email: "",
@@ -18,7 +18,7 @@ const defaultFormFields = {
 
 const SignInForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields)
-  const { email, password } = formFields;
+  const { email, password } = formFields
 
   const resetFormFields = () => {
     setFormFields(defaultFormFields)
@@ -32,10 +32,13 @@ const SignInForm = () => {
 
       resetFormFields()
     } catch (error) {
-      if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
-        alert('Incorrect email or password')
+      if (
+        error.code === "auth/wrong-password" ||
+        error.code === "auth/user-not-found"
+      ) {
+        alert("Incorrect email or password")
       } else {
-      console.log("user signing in encountered an error", error)
+        console.log("user signing in encountered an error", error)
       }
     }
   }
@@ -44,14 +47,14 @@ const SignInForm = () => {
     const { name, value } = event.target
 
     setFormFields({ ...formFields, [name]: value })
-  };
+  }
 
   const signInWithGoogle = async () => {
     await signInWithGooglePopup()
   }
 
   return (
-    <div className="sign-in-container">
+    <SignInContainer>
       <h2>I already have an account</h2>
       <span>Sign in with your email and password</span>
 
@@ -73,15 +76,19 @@ const SignInForm = () => {
           name="password"
           value={password}
         />
-        <div className="buttons-container">
+        <ButtonsContainer>
           <Button type="submit">Sign In</Button>
-          <Button type="button" buttonType="google" onClick={signInWithGoogle}>
+          <Button
+            type="button"
+            buttonType={BUTTON_TYPE_CLASSES.google}
+            onClick={signInWithGoogle}
+          >
             Google Sign In
           </Button>
-        </div>
+        </ButtonsContainer>
       </form>
-    </div>
+    </SignInContainer>
   )
 }
 
-export default SignInForm;
+export default SignInForm
