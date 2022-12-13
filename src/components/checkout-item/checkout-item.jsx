@@ -1,5 +1,5 @@
-import { CartContext } from '../../contexts/cart'
-import { useContext } from 'react'
+import { CartContext } from "../../contexts/cart"
+import { useContext } from "react"
 
 import {
   CheckoutItemContainer,
@@ -9,14 +9,15 @@ import {
   Arrow,
   Value,
   RemoveButton,
-} from './checkout-item.styles'
+} from "./checkout-item.styles"
 
-const CheckoutItem = ({checkoutItem}) => {
+const CheckoutItem = ({ checkoutItem }) => {
   const { changeCartItemQuantity, removeItemFromCart } = useContext(CartContext)
   const { name, quantity, imageUrl, price } = checkoutItem
 
   const incrementQuantityHandler = () => changeCartItemQuantity(checkoutItem, 1)
-  const decrementQuantityHandler = () => changeCartItemQuantity(checkoutItem, -1)
+  const decrementQuantityHandler = () =>
+    changeCartItemQuantity(checkoutItem, -1)
   const removeItemHandler = () => removeItemFromCart(checkoutItem)
 
   return (

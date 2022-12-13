@@ -1,6 +1,6 @@
-import DirectoryItem from '../directory-item/directory-item'
+import DirectoryItem from "../directory-item/directory-item"
 
-import { DirectoryContainer } from './directory.styles'
+import { DirectoryContainer } from "./directory.styles"
 
 const Directory = ({ directories }) => {
   return (
