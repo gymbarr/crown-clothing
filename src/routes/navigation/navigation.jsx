@@ -5,7 +5,6 @@ import { useSelector } from "react-redux"
 import { ReactComponent as CrownLogo } from "../../assets/crown.svg"
 import { CartIcon } from "../../components/cart-icon/cart-icon"
 import CartDropdown from "../../components/cart-dropdown/cart-dropdown"
-import { UserContext } from "../../contexts/user"
 import { CartContext } from "../../contexts/cart"
 
 import { signOutUser } from "../../utils/firebase/firebase"
