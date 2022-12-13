@@ -1,4 +1,6 @@
-import { createContext, useState, useEffect } from "react"
+import { createContext, useReducer } from "react"
+
+import { createAction } from "../utils/reducer/reducer"
 
 const addCartItem = (cartItems, productToAdd) => {
   const existingCartItem = cartItems.find(
@@ -39,42 +41,82 @@ export const CartContext = createContext({
   cartPrice: 0,
 })
 
-export const CartProvider = ({ children }) => {
-  const [dropdownVisible, setDropdownVisible] = useState(false)
-  const [cartItems, setCartItems] = useState([])
-  const [cartCount, setCartCount] = useState(0)
-  const [cartPrice, setCartPrice] = useState(0)
+export const CART_ACTION_TYPES = {
+  TOGGLE_DROPDOWN_VISIBLE: "TOGGLE_DROPDOWN_VISIBLE",
+  SET_CART_ITEMS: "SET_CART_ITEMS",
+}
 
-  useEffect(() => {
-    const newCartCount = cartItems.reduce(
+const cartReducer = (state, action) => {
+  const { type, payload } = action
+
+  switch (type) {
+    case CART_ACTION_TYPES.SET_CART_ITEMS:
+      return {
+        ...state,
+        ...payload,
+      }
+    case CART_ACTION_TYPES.TOGGLE_DROPDOWN_VISIBLE:
+      return {
+        ...state,
+        dropdownVisible: !state.dropdownVisible,
+      }
+    default:
+      throw new Error(`Unhandled type ${type} in cartReducer`)
+  }
+}
+
+const INITIAL_STATE = {
+  dropdownVisible: false,
+  cartItems: [],
+  cartCount: 0,
+  cartPrice: 0,
+}
+
+export const CartProvider = ({ children }) => {
+  const [{ dropdownVisible, cartItems, cartCount, cartPrice }, dispatch] =
+    useReducer(cartReducer, INITIAL_STATE)
+
+  const toggleDropdownVisible = () => {
+    dispatch(createAction(CART_ACTION_TYPES.TOGGLE_DROPDOWN_VISIBLE))
+  }
+
+  const updateCartItemsReducer = (newCartItems) => {
+    const newCartCount = newCartItems.reduce(
       (total, cartItem) => total + cartItem.quantity,
       0
     )
 
-    setCartCount(newCartCount)
-  }, [cartItems])
-
-  useEffect(() => {
-    const newCartPrice = cartItems.reduce(
+    const newCartPrice = newCartItems.reduce(
       (total, cartItem) => total + cartItem.price * cartItem.quantity,
       0
     )
 
-    setCartPrice(newCartPrice)
-  }, [cartItems])
-
-  const toggleDropdownVisible = () => setDropdownVisible(!dropdownVisible)
+    dispatch(
+      createAction(CART_ACTION_TYPES.SET_CART_ITEMS, {
+        cartItems: newCartItems,
+        cartCount: newCartCount,
+        cartPrice: newCartPrice,
+      })
+    )
+  }
 
   const addItemToCart = (productToAdd) => {
-    setCartItems(addCartItem(cartItems, productToAdd))
+    const newCartItems = addCartItem(cartItems, productToAdd)
+    updateCartItemsReducer(newCartItems)
   }
 
   const changeCartItemQuantity = (cartItemToChangeQuantity, value) => {
-    setCartItems(changeItemQuantity(cartItems, cartItemToChangeQuantity, value))
+    const newCartItems = changeItemQuantity(
+      cartItems,
+      cartItemToChangeQuantity,
+      value
+    )
+    updateCartItemsReducer(newCartItems)
   }
 
   const removeItemFromCart = (cartItemToRemove) => {
-    setCartItems(removeCartItem(cartItems, cartItemToRemove))
+    const newCartItems = removeCartItem(cartItems, cartItemToRemove)
+    updateCartItemsReducer(newCartItems)
   }
 
   const value = {
