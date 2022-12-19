@@ -23,12 +23,12 @@ import {
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDh5Fq-6MWGu8agxoYrcwz5cvuaNmTy3MM",
-  authDomain: "crown-clothing-db-cd62f.firebaseapp.com",
-  projectId: "crown-clothing-db-cd62f",
-  storageBucket: "crown-clothing-db-cd62f.appspot.com",
-  messagingSenderId: "816721668372",
-  appId: "1:816721668372:web:b8674b3173dc3cd30e3a01",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
 }
 
 // Initialize Firebase
